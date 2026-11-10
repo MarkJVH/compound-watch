@@ -1,0 +1,6 @@
+@CompoundWatch.Api_HostAddress = http://localhost:5264
+
+GET {{CompoundWatch.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
