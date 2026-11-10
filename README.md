@@ -1,25 +1,25 @@
 # CompoundWatch
 
-Leerproject: aandelentracker met watchlist, statistieken en koersalerts.
+Learning project: stock tracker with watchlist, statistics and price alerts.
 Stack: ASP.NET Core (.NET 10), PostgreSQL, RabbitMQ, Next.js.
 
-## Lokaal draaien
+## Run locally
 
 ```bash
 docker compose up -d          # Postgres, RabbitMQ (UI :15672), Mailpit (UI :8025)
 dotnet run --project src/Api  # GET /health
 ```
 
-## Structuur
+## Structure
 
 - `src/Api` – REST API
-- `src/Worker` – achtergrondjobs en consumers
-- `src/Domain` – entiteiten en domeinlogica
-- `src/Infrastructure` – database en externe integraties
-- `web/` – Next.js frontend (komt later)
+- `src/Worker` – background jobs and consumers
+- `src/Domain` – entities and domain logic
+- `src/Infrastructure` – database and external integrations
+- `web/` – Next.js frontend (later)
 
-## Bekende build-waarschuwing
+## Known build warning
 
-`NU1903` op `Microsoft.OpenApi` 2.0.0 komt transitief uit `Microsoft.AspNetCore.OpenApi` (template). Versie 3.x is niet compatibel met ASP.NET Core 10. Oplossen zodra Microsoft.AspNetCore.OpenApi een gepatchte afhankelijkheid meebrengt.
+`NU1903` on `Microsoft.OpenApi` 2.0.0 comes transitively from `Microsoft.AspNetCore.OpenApi` (template). Version 3.x is not compatible with ASP.NET Core 10. Resolve once Microsoft.AspNetCore.OpenApi ships a patched dependency.
 
-Geen beleggingsadvies.
+Not investment advice.
