@@ -15,7 +15,7 @@ Check the step's learning mode in the plan. **I build**: do not write the code; 
 
 ## 2. Verify: evidence before claims
 Never say "done", "fixed" or "passes" without command output from **this** turn.
-- `dotnet build` (no new warnings; the known `NU1903` is documented)
+- Build: `dotnet build` should give 0 warnings.
 - `dotnet test`
 - `dotnet format --verify-no-changes`
 - `git diff --check`

@@ -45,4 +45,4 @@ Primary goal of the project: the owner learns the core principles of the stack. 
 - Main branch: `master`.
 
 ## Known issues
-- `NU1903` on `Microsoft.OpenApi` 2.0.0 (transitive via `Microsoft.AspNetCore.OpenApi`). See README.
+- None.
