@@ -46,6 +46,13 @@ Add rows when a new concept appears. Keep names specific.
 
 Newest first. Written by `cw-learn` after each session.
 
+### 2026-11-10 – Phase 2, step 1: Instrument (in progress)
+- Built: `Instrument` (rich domain model, factory method) and a first unit test.
+- Concepts: C# classes and factory methods, invariants, `ArgumentException.ThrowIfNullOrWhiteSpace`, xUnit basics (Fact/Theory/Assert).
+- Hard: constructor vs private constructor + static `Create`; `null!` and nullable warnings; normalising before validating.
+- Next time I do myself: tests for the failure paths (empty values, invalid currency) and a test that proves `Name` is set.
+- Matrix levels stay unchanged until the end of the phase (with evidence).
+
 ### 2026-11-10 – Phase 1: foundation
 - Built: solution layout, Compose stack, `/health`.
 - Concepts: Docker and Compose (level 1).

@@ -21,7 +21,9 @@ Map the work as a design tree: each decision branches into the decisions that de
 ➡️ <recommended answer>
 ```
 
-Answers can unblock, change or remove later questions. Done when no branch is open and nothing is silently assumed. Typical branches for this stack: data model and constraints, API contract, sync vs async (RabbitMQ), failure and retry behaviour, idempotency, time and currency handling, testing approach.
+The `ask_user` message is plain text: no markdown (no `**`, no backticks); use plain words, indented code and blank lines only.
+
+Answers can unblock, change or remove later questions. The owner often has level 0 knowledge of a concept (check `LEARNING.md`): explain the options with a short code example **inside the `ask_user` message itself**, because text outside the form is not visible to the owner. Done when no branch is open and nothing is silently assumed. Typical branches for this stack: data model and constraints, API contract, sync vs async (RabbitMQ), failure and retry behaviour, idempotency, time and currency handling, testing approach.
 
 ## 4. ADR candidates
 Propose an ADR only when a decision is **hard to reverse**, **surprising without context** and **a real trade-off**. Note it in the plan under "ADR candidates"; `cw-document` writes it after approval. Do not write ADRs here.

@@ -18,7 +18,7 @@ Talk to the user in Dutch. Keep the axes separate: a change can pass one and fai
 
 **Standards**: apply the `dotnet-standards` checklist. Search all callers and contracts of what changed. Check missing or weakened tests and unrelated changes. A new main folder or project without a `CONTEXT.md` is a finding (easy: create it).
 
-**Security**: secrets in code or compose beyond local dev defaults, SQL built from strings, missing input validation at API boundaries, missing authz, sensitive data in logs, unsafe deserialization, outbound calls without timeouts.
+**Security**: secrets or personal/work data in code, docs, compose or tests (see the sensitive-data check in `cw-commit`), SQL built from strings, missing input validation at API boundaries, missing authz, sensitive data in logs, unsafe deserialization, outbound calls without timeouts.
 
 **Slop**: lines the task did not need.
 - An input's shape re-checked downstream instead of once at its boundary

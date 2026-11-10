@@ -5,7 +5,7 @@ description: 'Orchestrates the full CompoundWatch workflow: plan (grill-me) -> b
 
 # Flow
 
-Runs the phases in order. Each phase is its own skill; follow it exactly. Talk to the user in Dutch.
+Run the phases in order. Each phase is its own skill; follow it exactly. Talk to the user in Dutch, keeping English technical terms untranslated (see `.github/context.md`).
 
 ```
 cw-plan -> [ cw-build <-> cw-review ]* -> cw-document -> cw-commit -> cw-learn
