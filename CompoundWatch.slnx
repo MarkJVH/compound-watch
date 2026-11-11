@@ -12,4 +12,8 @@
   <Folder Name="/src/Worker/">
     <Project Path="src/Worker/CompoundWatch.Worker.csproj" />
   </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/Domain.Tests/">
+    <Project Path="tests/Domain.Tests/CompoundWatch.Domain.Tests.csproj" />
+  </Folder>
 </Solution>
