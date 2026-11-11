@@ -1,0 +1,7 @@
+*.csproj
+*.slnx
+*.props
+*.targets
+*.xml
+*.json
+*.md
