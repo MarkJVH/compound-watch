@@ -36,6 +36,7 @@ description: 'Review and implementation checklist for this stack: ASP.NET Core, 
 - Workers handle graceful shutdown via the stopping token.
 
 ## Tests
+- Formatting: CSharpier (`dotnet csharpier check .`), configured via `.config/dotnet-tools.json`; it only formats `.cs` files (see `.csharpierignore`).
 - Test behaviour, not implementation. Arrange/Act/Assert, one behaviour per test.
 - Unit tests for domain logic; integration tests for endpoints (`WebApplicationFactory`) and data access.
 - No sleeps; no shared mutable state between tests.

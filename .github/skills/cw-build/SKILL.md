@@ -17,7 +17,7 @@ Check the step's learning mode in the plan. **I build**: do not write the code; 
 Never say "done", "fixed" or "passes" without command output from **this** turn.
 - Build: `dotnet build` should give 0 warnings.
 - `dotnet test`
-- `dotnet format --verify-no-changes`
+- Format: `dotnet csharpier check .` (CSharpier is the formatter; fix with `dotnet csharpier format .`)
 - `git diff --check`
 - EF migrations: the migration applies to a clean database (`docker compose up -d postgres`).
 - Bug fix: prove the test catches the bug (revert fix: fails; restore: passes).

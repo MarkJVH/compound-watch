@@ -25,7 +25,7 @@ This is a public-style repo; nothing personal, work-related or secret may be com
 - Work data: employer names, internal hostnames, project or ticket names, code or text copied from work repositories.
 - Local artefacts: `.plans/`, IDE settings, logs, `*.user`, database dumps.
 Use `git grep -n -I -i -E "password|secret|token|apikey|api_key|BEGIN .*PRIVATE KEY|@[a-z0-9.-]+\.[a-z]{2,}"` as a first pass. Local dev credentials in `docker-compose.yml` are the only accepted exception. If anything matches, stop, show it to the owner and do not commit.
-- Add the trailer `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>` to each commit message.
+- Do not add `Co-authored-by` trailers (the owner does not want Copilot listed as a contributor).
 
 ## 3. Ask once, then act
 Show the commit groups and messages, then ask: "Commit and push?" (Dutch). Skip the question only when the user already answered it.
