@@ -23,7 +23,7 @@ Hobby project to broaden full-stack knowledge, with emphasis on the backend and 
 
 ## Phases
 1. Foundation: solution, Compose stack, `/health` (done)
-2. Domain and database with EF Core (next)
+2. Domain and database with EF Core (in progress: domain entities done; DbContext, migration and integration tests open)
 3. Later phases: see the owner's plan (not in the repo)
 
 ## Conventions
