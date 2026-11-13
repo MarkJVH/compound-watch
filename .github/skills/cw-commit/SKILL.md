@@ -6,14 +6,14 @@ description: 'Commit phase: groups finished, reviewed and documented changes int
 # Commit
 
 ## 1. Preconditions
-- `cw-document` has run on the current diff.
+- `cw-document` and then `cw-learn` have run on the current diff; `LEARNING.md` must be updated before committing. If not, run `cw-learn` first.
 - `cw-build` verification passed on the current diff; re-run it if unsure. A failing check is unfinished work.
 - Check `git config user.email` (repo-local) is the private address the owner set for this project, not a work address. Stop and tell the user otherwise.
 - Run the sensitive-data check below on the staged diff before every commit.
 
 ## 2. Group the commits
 - One concern per commit; tests go with the code they test.
-- ADRs and `CONTEXT.md`/skill updates go in their own `docs:` commit.
+- ADRs, `CONTEXT.md`, `LEARNING.md` and skill updates go in their own `docs:` commit.
 - Conventional commits: `<type>(<project>): <summary>`, e.g. `feat(domain): add Instrument entity`. Types: `feat|fix|chore|docs|refactor|test`. English, imperative.
 - Each commit should leave the solution building.
 - Never commit `.plans/`, secrets or build output.

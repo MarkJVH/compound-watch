@@ -38,7 +38,7 @@ Hobby project to broaden full-stack knowledge, with emphasis on the backend and 
 `cw-flow` orchestrates: `cw-plan` (grill-me, ADR candidates) → `cw-build` ⇄ `cw-review` (loops until no findings or the owner says continue; easy findings are fixed directly, hard ones discussed) → `cw-document` (ADRs in `docs/adr/`, `CONTEXT.md` per project) → `cw-commit`. Stack checklist: `dotnet-standards`. Plans live in `.plans/` (gitignored).
 
 ## Learning
-Primary goal of the project: the owner learns the core principles of the stack. Progress is tracked in `LEARNING.md` (competency matrix with levels 0–4, only raised with evidence). Each flow ends with `cw-learn`. Prefer the "I build" mode for concepts the owner has not mastered yet.
+Primary goal of the project: the owner learns the core principles of the stack. Progress is tracked in `LEARNING.md` (competency matrix with levels 0–4, only raised with evidence). `cw-learn` runs before every commit. Prefer the "I build" mode for concepts the owner has not mastered yet.
 
 ## Git
 - Remote: `origin` over SSH using the private SSH alias (see `~/.ssh/config`, not in the repo).

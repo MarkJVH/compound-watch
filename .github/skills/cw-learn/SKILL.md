@@ -1,6 +1,6 @@
 ---
 name: cw-learn
-description: 'Learning phase after cw-commit: maps the session to stack concepts, asks the owner questions to verify understanding, updates the competency matrix in LEARNING.md based on evidence and proposes the next exercise. USE WHEN: a flow finished, or the user says "learn", "quiz me" or "update my progress".'
+description: 'Learning phase after cw-document and before cw-commit: maps the session to stack concepts, asks the owner questions to verify understanding, updates the competency matrix in LEARNING.md based on evidence and proposes the next exercise. USE WHEN: the document phase is done and before every commit, or the user says "learn", "quiz me" or "update my progress".'
 ---
 
 # Learn
@@ -28,7 +28,7 @@ Do not give the answer before the owner replied. Judge the answer, then explain 
 Show the proposed changes and write after the owner agrees.
 
 ## 4. Next exercise
-Propose one small exercise for the weakest relevant concept, to be done without AI (for example "write the migration for X yourself", "add an integration test for Y"). Add it to the exercises list in `LEARNING.md`. Leave changes uncommitted or commit as `docs: update learning progress` after the owner says yes.
+Propose one small exercise for the weakest relevant concept, to be done without AI (for example "write the migration for X yourself", "add an integration test for Y"). Add it to the exercises list in `LEARNING.md`. Leave `LEARNING.md` uncommitted; `cw-commit` includes it in the `docs:` commit.
 
 ## Learning modes (set in `cw-plan`)
 - **AI builds**: the AI implements; the owner reviews and answers questions.

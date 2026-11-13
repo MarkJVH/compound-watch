@@ -1,6 +1,6 @@
 ---
 name: cw-flow
-description: 'Orchestrates the full CompoundWatch workflow: plan (grill-me) -> build <-> review loop -> document -> commit. USE WHEN: starting a feature, fix or phase end to end, or the user says "start flow" or "nieuwe feature".'
+description: 'Orchestrates the full CompoundWatch workflow: plan (grill-me) -> build <-> review loop -> document -> learn -> commit. USE WHEN: starting a feature, fix or phase end to end, or the user says "start flow" or "nieuwe feature".'
 ---
 
 # Flow
@@ -8,10 +8,10 @@ description: 'Orchestrates the full CompoundWatch workflow: plan (grill-me) -> b
 Run the phases in order. Each phase is its own skill; follow it exactly. Talk to the user in Dutch, keeping English technical terms untranslated (see `.github/context.md`).
 
 ```
-cw-plan -> [ cw-build <-> cw-review ]* -> cw-document -> cw-commit -> cw-learn
+cw-plan -> [ cw-build <-> cw-review ]* -> cw-document -> cw-learn -> cw-commit
 ```
 
-The owner's main goal is learning the stack's core principles. `cw-plan` sets a learning mode per step; `cw-learn` closes the session and updates `LEARNING.md`.
+The owner's main goal is learning the stack's core principles. `cw-plan` sets a learning mode per step; `cw-learn` runs before every commit and updates `LEARNING.md`.
 
 ## 1. Plan: `cw-plan`
 Grill-me interview, ADR candidates, approved plan. Do not continue without approval.
@@ -29,8 +29,11 @@ Rules for the loop:
 ## 3. Document: `cw-document`
 Runs once the loop ends, before any commit. Creates or updates ADRs and `CONTEXT.md` files.
 
-## 4. Commit: `cw-commit`
+## 4. Learn: `cw-learn`
+Runs after `cw-document` and before every commit, so `LEARNING.md` is updated in the same flow and lands in the `docs:` commit.
+
+## 5. Commit: `cw-commit`
 Groups commits and, only after the user says yes, commits and pushes.
 
 ## State
-The plan lives in `.plans/<kebab-desc>.md` (gitignored). Keep a short "Status" line at the top: `plan | build | review | document | commit`.
+The plan lives in `.plans/<kebab-desc>.md` (gitignored). Keep a short "Status" line at the top: `plan | build | review | document | learn | commit`.
