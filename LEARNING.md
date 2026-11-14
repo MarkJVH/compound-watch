@@ -22,11 +22,11 @@ A level only goes up with evidence in the table. It may go down after a relapse 
 | C# async/await and `CancellationToken` | 0 | – | – |
 | Dependency injection and options pattern | 0 | – | – |
 | Minimal API design (routing, DTOs, validation, `ProblemDetails`) | 0 | – | – |
-| EF Core mapping and constraints | 2 | Wrote `PriceQuoteConfiguration` (composite key, FK, `Restrict`, precision) from an `Instrument` example, with review. Quiz: `Restrict` direction right, missed that the database enforces it; `decimal` precision/scale right, missed why `decimal` beats `double` (session 2026-11-14) | 2026-11-14 |
+| EF Core mapping and constraints | 3 | Wrote `PriceQuoteConfiguration` from an `Instrument` example (2026-11-14), then `WatchlistItemConfiguration` (key, unique index, FK, `Cascade`) without an example; the AI only reviewed (first version had 3 compile errors and a wrong uniqueness argument, fixed after review). Own words: `decimal` is exact base-10, `double` is not | 2026-11-14 |
 | EF Core migrations | 0 | – | – |
 | EF Core querying (tracking, projection, N+1) | 0 | – | – |
 | Transactions and concurrency | 0 | – | – |
-| PostgreSQL basics (indexes, query plans) | 1 | Explained B-tree, page, page split, cache miss, Guid v7 versus v4 (session 2026-11-14); own-words answers needed several corrections, so not higher | 2026-11-14 |
+| PostgreSQL basics (indexes, query plans) | 1 | Explained B-tree, page, page split, cache miss, Guid v7 versus v4 (session 2026-11-14); own-words answers needed several corrections, so not higher. Later same day, own words and correct: why a sequential scan beats an index on a tiny table; composite index order (leftmost prefix) needed one correction | 2026-11-14 |
 | RabbitMQ (exchanges, queues, ack/nack) | 0 | – | – |
 | Idempotency, retries and dead-lettering | 0 | – | – |
 | Background workers and graceful shutdown | 0 | – | – |
@@ -42,11 +42,23 @@ Add rows when a new concept appears. Keep names specific.
 ## Exercises (done without AI)
 
 - [x] Phase 2, step 2: write `IEntityTypeConfiguration<PriceQuote>` (done 2026-11-14 with an `Instrument` example and review) and explain why Guid v7 beats v4 for an index (done, after several corrections).
-- [ ] Phase 2, step 3: write `WatchlistItemConfiguration` yourself, without an example, then explain in your own words why `decimal` and not `double` for prices.
+- [x] Phase 2, step 3: write `WatchlistItemConfiguration` yourself, without an example (done 2026-11-14, after review), then explain in your own words why `decimal` and not `double` for prices (done: exact versus not exact; missed binary versus base-10 as the cause).
+- [ ] Phase 2, step 4: create `AppDbContext` with `ApplyConfigurationsFromAssembly` and an `InstrumentConfiguration` yourself, generate the first migration and explain every line of the generated SQL (`NOT NULL`, `ON DELETE`, indexes).
 
 ## Session log
 
 Newest first. Written by `cw-learn` after each session.
+
+### 2026-11-14 – Phase 2, step 3: WatchlistItem EF Core mapping
+- Built: `WatchlistItemConfiguration` (key, unique index on `InstrumentId`, FK to `Instrument` with `Cascade`), written by the owner without an example.
+- Concepts: `:` as interface implementation, generic type parameter `TEntity`, assembly (compiled `.dll` with IL and metadata) and reflection in `ApplyConfigurationsFromAssembly`, `IsRequired()` versus nullable types, default `DeleteBehavior` (Cascade for a required FK, ClientSetNull for optional), one-to-many with a join table, composite index order (leftmost prefix), several indexes and the query planner, sequential scan versus index, Cascade does not notify the app (outbox pattern later).
+- Hard: unique on `Id` does not stop the same instrument twice (each item gets its own `Id`); `HasIndex()`/`HasForeignKey()` need arguments; the FK direction (`User` 1→N `WatchlistItem` N←1 `Instrument`).
+- Quiz:
+  - `decimal` versus `double`: exact versus not exact (right). Missing cause: `double` is binary floating point, so 0.1 has no exact representation; `decimal` is base-10.
+  - Composite index order: user first gives a contiguous range (right direction). Reversing it breaks the other query; use two indexes.
+  - Sequential scan on a tiny table: right (one page, no index hop).
+  - Outbox: event in the same transaction as the delete, so you never notify for a delete that did not complete, nor skip the notification for one that did (right, own words).
+- Next time I do myself: `AppDbContext` + `InstrumentConfiguration` + first migration (see exercises). Design later: `UserId` on `WatchlistItem` (unique `(UserId, InstrumentId)` plus index on `InstrumentId`).
 
 ### 2026-11-14 – Phase 2, step 2: PriceQuote EF Core mapping
 - Built: `PriceQuoteConfiguration` (composite key, FK to `Instrument` with `Restrict`, `HasPrecision(18, 6)`); English-jargon rule in `.github/context.md` and `cw-learn`.
