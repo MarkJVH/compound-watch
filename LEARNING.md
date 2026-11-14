@@ -22,11 +22,11 @@ A level only goes up with evidence in the table. It may go down after a relapse 
 | C# async/await and `CancellationToken` | 0 | – | – |
 | Dependency injection and options pattern | 0 | – | – |
 | Minimal API design (routing, DTOs, validation, `ProblemDetails`) | 0 | – | – |
-| EF Core mapping and constraints | 1 | Explained composite key and DB-enforced uniqueness (session 2026-11-13); answered correctly why uniqueness is not checked in the domain | 2026-11-13 |
+| EF Core mapping and constraints | 2 | Wrote `PriceQuoteConfiguration` (composite key, FK, `Restrict`, precision) from an `Instrument` example, with review. Quiz: `Restrict` direction right, missed that the database enforces it; `decimal` precision/scale right, missed why `decimal` beats `double` (session 2026-11-14) | 2026-11-14 |
 | EF Core migrations | 0 | – | – |
 | EF Core querying (tracking, projection, N+1) | 0 | – | – |
 | Transactions and concurrency | 0 | – | – |
-| PostgreSQL basics (indexes, query plans) | 0 | – | – |
+| PostgreSQL basics (indexes, query plans) | 1 | Explained B-tree, page, page split, cache miss, Guid v7 versus v4 (session 2026-11-14); own-words answers needed several corrections, so not higher | 2026-11-14 |
 | RabbitMQ (exchanges, queues, ack/nack) | 0 | – | – |
 | Idempotency, retries and dead-lettering | 0 | – | – |
 | Background workers and graceful shutdown | 0 | – | – |
@@ -41,11 +41,22 @@ Add rows when a new concept appears. Keep names specific.
 
 ## Exercises (done without AI)
 
-- [ ] Phase 2, step 2: write `IEntityTypeConfiguration<PriceQuote>` yourself (composite key, `decimal(18,6)`, FK to `Instrument`), then explain in your own words why Guid v7 beats v4 for an index (time-ordered inserts).
+- [x] Phase 2, step 2: write `IEntityTypeConfiguration<PriceQuote>` (done 2026-11-14 with an `Instrument` example and review) and explain why Guid v7 beats v4 for an index (done, after several corrections).
+- [ ] Phase 2, step 3: write `WatchlistItemConfiguration` yourself, without an example, then explain in your own words why `decimal` and not `double` for prices.
 
 ## Session log
 
 Newest first. Written by `cw-learn` after each session.
+
+### 2026-11-14 – Phase 2, step 2: PriceQuote EF Core mapping
+- Built: `PriceQuoteConfiguration` (composite key, FK to `Instrument` with `Restrict`, `HasPrecision(18, 6)`); English-jargon rule in `.github/context.md` and `cw-learn`.
+- Concepts: `IEntityTypeConfiguration`, `HasOne().WithMany().HasForeignKey()` without navigation properties, `DeleteBehavior`, redundant `IsRequired()`/`ValueGeneratedNever()`, B-tree (not binary tree), page, leaf, split, cache miss, fragmentation, Guid v7 versus v4.
+- Hard: B-tree versus binary tree; cache miss and page split are two separate causes; a leaf holds a key range but is full by entry count; why `decimal` beats `double`.
+- Quiz:
+  - `Remove(aapl)` with `Restrict`: right direction. Full answer: the migration contains `ON DELETE RESTRICT`, PostgreSQL rejects the `DELETE` with a foreign key violation, EF Core surfaces it as `DbUpdateException`, nothing is deleted (transaction). With `Cascade` PostgreSQL deletes the instrument and all its quotes silently.
+  - `decimal` versus `double`: precision/scale right (18 total digits, 6 after the comma). Full answer: `double` is binary floating point and cannot represent values like 0.1 exactly (`0.1 + 0.2 = 0.30000000000000004`); `decimal` stores base-10 digits exactly, which is what you want for prices.
+  - B-tree and Guid v7 versus v4: v7 inserts land in the rightmost leaf (hot in memory, leaves stay full); v4 inserts land randomly (cache miss, page split in the middle, half-empty leaves, bigger index). Lookups cost the same; v7 does not speed up queries by date.
+- Next time I do myself: `WatchlistItemConfiguration` (see exercises).
 
 ### 2026-11-13 – Phase 2, step 1: PriceQuote and Domain tests
 - Built: `PriceQuote` (OHLC + volume, factory with invariants) and its unit tests; ADRs 0001/0002.

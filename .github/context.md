@@ -3,6 +3,7 @@
 ## Language
 - **Everything in the repository is English**: code, identifiers, comments, commit messages, README, ADRs, `CONTEXT.md` files, skills and plans.
 - **Communication with the owner (chat, questions, review findings) is in Dutch**, but keep established English stack and industry terms as they are (for example "rich domain model", "anemic model", "dependency injection", "migration", "idempotent", "dead-letter queue", "N+1"). Never invent Dutch translations of technical terms; this also helps the owner learn the vocabulary used on the job.
+- This applies to explanations and analogies too, not only to code: write "page", "index", "B-tree", "foreign key", "orphan row", "page split" and so on in English. When introducing a term the owner may not know, give the English term first and explain it in plain Dutch right after (for example "*page*: a fixed-size block of data that the database reads and writes in one go").
 
 ## Goal
 Hobby project to broaden full-stack knowledge, with emphasis on the backend and a stack that is relevant on the job market. A stock tracker with a watchlist, statistics and price alerts. Not investment advice.

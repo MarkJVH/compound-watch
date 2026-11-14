@@ -5,7 +5,7 @@ description: 'Learning phase after cw-document and before cw-commit: maps the se
 
 # Learn
 
-Purpose: the owner must learn the core principles of the stack. Progress is measured in `LEARNING.md` and only moves with evidence. Talk to the user in Dutch; write `LEARNING.md` in English.
+Purpose: the owner must learn the core principles of the stack. Progress is measured in `LEARNING.md` and only moves with evidence. Talk to the user in Dutch; write `LEARNING.md` in English. Keep stack jargon in English, also in explanations and quiz questions (see `.github/context.md`).
 
 ## 1. Map the session
 Read `LEARNING.md` and the session's diff/commits. List the concepts touched (rows in the matrix; add rows for new concepts). Note who wrote what: the owner or the AI (check the learning mode in the plan).
