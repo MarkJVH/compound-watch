@@ -43,11 +43,23 @@ Add rows when a new concept appears. Keep names specific.
 
 - [x] Phase 2, step 2: write `IEntityTypeConfiguration<PriceQuote>` (done 2026-11-14 with an `Instrument` example and review) and explain why Guid v7 beats v4 for an index (done, after several corrections).
 - [x] Phase 2, step 3: write `WatchlistItemConfiguration` yourself, without an example (done 2026-11-14, after review), then explain in your own words why `decimal` and not `double` for prices (done: exact versus not exact; missed binary versus base-10 as the cause).
-- [ ] Phase 2, step 4: create `AppDbContext` with `ApplyConfigurationsFromAssembly` and an `InstrumentConfiguration` yourself, generate the first migration and explain every line of the generated SQL (`NOT NULL`, `ON DELETE`, indexes).
+- [x] Phase 2, step 4a: create `AppDbContext` and `InstrumentConfiguration` yourself (done 2026-11-15, after review: wrong `DbContextOptions<DbContext>`, a `HasKey` that overwrote the key, an index on `Id` instead of `Symbol`).
+- [ ] Phase 2, step 4b: set up the connection string (user secrets) and `AddInfrastructure`, generate the first migration and explain every line of the generated SQL (`NOT NULL`, `ON DELETE`, indexes).
 
 ## Session log
 
 Newest first. Written by `cw-learn` after each session.
+
+### 2026-11-15 – Phase 2, step 4a: AppDbContext and InstrumentConfiguration
+- Built: `AppDbContext` (three `DbSet`s, `ApplyConfigurationsFromAssembly`) and `InstrumentConfiguration` (key, `ValueGeneratedNever`, unique index on `(Symbol, Exchange)`), written by the owner; the AI reviewed.
+- Concepts: what belongs in a `DbContext`, `HasPrecision` versus `ConfigureConventions`, snake_case naming and PostgreSQL identifier quoting, `UseSnakeCaseNamingConvention` belongs in the options, composition root and an `AddInfrastructure` extension (DRY), surrogate versus natural key, DI resolves options by exact generic type at runtime.
+- Hard: the second `HasKey` overwrites the first; the compiler does not see model mistakes; an index on `(Id, ...)` guards nothing. The owner reported information overload, so connection string/user secrets were deferred.
+- Quiz:
+  - Quoted `"WatchlistItems"` versus unquoted `watchlistitems`: right, own words.
+  - Index order `(Symbol, Exchange)`: right, own argument (selectivity).
+  - Why `DbContextOptions<DbContext>` fails only at runtime: not yet understood (answer given: DI container resolves by exact type).
+  - Natural versus surrogate key, naming convention location, connection string key: answered by the AI after "don't know".
+- Next time I do myself: step 4b (see exercises). Small steps, one topic at a time.
 
 ### 2026-11-14 – Phase 2, step 3: WatchlistItem EF Core mapping
 - Built: `WatchlistItemConfiguration` (key, unique index on `InstrumentId`, FK to `Instrument` with `Cascade`), written by the owner without an example.
