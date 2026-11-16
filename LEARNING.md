@@ -44,11 +44,23 @@ Add rows when a new concept appears. Keep names specific.
 - [x] Phase 2, step 2: write `IEntityTypeConfiguration<PriceQuote>` (done 2026-11-14 with an `Instrument` example and review) and explain why Guid v7 beats v4 for an index (done, after several corrections).
 - [x] Phase 2, step 3: write `WatchlistItemConfiguration` yourself, without an example (done 2026-11-14, after review), then explain in your own words why `decimal` and not `double` for prices (done: exact versus not exact; missed binary versus base-10 as the cause).
 - [x] Phase 2, step 4a: create `AppDbContext` and `InstrumentConfiguration` yourself (done 2026-11-15, after review: wrong `DbContextOptions<DbContext>`, a `HasKey` that overwrote the key, an index on `Id` instead of `Symbol`).
-- [ ] Phase 2, step 4b: set up the connection string (user secrets) and `AddInfrastructure`, generate the first migration and explain every line of the generated SQL (`NOT NULL`, `ON DELETE`, indexes).
+- [x] Phase 2, step 4b-1: write `AddInfrastructure` (`AddDbContext` + `UseNpgsql` + snake_case), call it from `Api` and `Worker`, set the connection string with user secrets (done 2026-11-16, after review: missing `this`, wrong auto-import).
+- [ ] Phase 2, step 4b-2: install `dotnet-ef`, generate the first migration (`InitialCreate`) and explain every line of the generated SQL (`NOT NULL`, `ON DELETE`, indexes). Also explain why `dotnet ef` needs `--startup-project`.
 
 ## Session log
 
 Newest first. Written by `cw-learn` after each session.
+
+### 2026-11-16 – Phase 2, step 4b-1: AddInfrastructure and user secrets
+- Built: `AddInfrastructure` extension (connection string with a fail-fast check, `AddDbContext`), called from `Api` and `Worker`; connection string in user secrets. Written by the owner; the AI reviewed.
+- Concepts: extension methods (`this`), compile-time versus runtime errors, dependency injection (register versus resolve), options reach the context through the constructor, one context for all environments via `IConfiguration`, library versus host (composition root), purpose of the Worker, user secrets (outside the repo, plain text), `dotnet run <file>.cs` versus `--project`.
+- Hard: forgot `this`; wrong auto-import again; ran `dotnet run src/Api/Program.cs` (file-based app, no project references).
+- Quiz:
+  - Why a missing `this` shows up in `Program.cs`: right moment, reason refined (extension lookup at the call site).
+  - Missing connection string: build or runtime: answered "build"; correct is runtime (config is not seen by the compiler).
+  - Why one `DbContext` for all environments: right, own words.
+  - Forgetting `AddInfrastructure` in the Worker: answered by the AI; not yet checked.
+- Next time I do myself: step 4b-2 (see exercises). Small steps.
 
 ### 2026-11-15 – Phase 2, step 4a: AppDbContext and InstrumentConfiguration
 - Built: `AppDbContext` (three `DbSet`s, `ApplyConfigurationsFromAssembly`) and `InstrumentConfiguration` (key, `ValueGeneratedNever`, unique index on `(Symbol, Exchange)`), written by the owner; the AI reviewed.
