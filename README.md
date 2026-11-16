@@ -1,7 +1,7 @@
 # CompoundWatch
 
 Learning project: stock tracker with watchlist, statistics and price alerts.
-Stack: ASP.NET Core (.NET 10), PostgreSQL, RabbitMQ, Next.js.
+Stack: ASP.NET Core (.NET 10), PostgreSQL, RabbitMQ, Next.js, Tailwind & Shadcn.
 
 ## Run locally
 
