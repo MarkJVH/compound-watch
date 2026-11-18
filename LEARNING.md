@@ -20,10 +20,10 @@ A level only goes up with evidence in the table. It may go down after a relapse 
 |---|---|---|---|
 | C# language basics (value types, `default`, nullability, `nameof`, exceptions) | 2 | Wrote `Instrument`, `WatchlistItem`, `PriceQuote` myself with AI hints/review (commits `fba1968`, `fea7be3`) | 2026-11-13 |
 | C# async/await and `CancellationToken` | 0 | – | – |
-| Dependency injection and options pattern | 0 | – | – |
+| Dependency injection and options pattern | 2 | Wrote `AddInfrastructure` (`AddDbContext`, connection string fail-fast) and wired it in `Api` and `Worker` myself with hints (commit `03f2ab4`). Own words: one context for all environments through injected options. Mistake: thought a missing connection string fails at build time | 2026-11-18 |
 | Minimal API design (routing, DTOs, validation, `ProblemDetails`) | 0 | – | – |
 | EF Core mapping and constraints | 3 | Wrote `PriceQuoteConfiguration` from an `Instrument` example (2026-11-14), then `WatchlistItemConfiguration` (key, unique index, FK, `Cascade`) without an example; the AI only reviewed (first version had 3 compile errors and a wrong uniqueness argument, fixed after review). Own words: `decimal` is exact base-10, `double` is not | 2026-11-14 |
-| EF Core migrations | 0 | – | – |
+| EF Core migrations | 2 | Generated and applied `InitialCreate` with AI-given commands; read the C# migration and the real table in `psql`. Own words: `NOT NULL` source, `Restrict` versus `Cascade`, composite key order (needed a refinement) | 2026-11-18 |
 | EF Core querying (tracking, projection, N+1) | 0 | – | – |
 | Transactions and concurrency | 0 | – | – |
 | PostgreSQL basics (indexes, query plans) | 1 | Explained B-tree, page, page split, cache miss, Guid v7 versus v4 (session 2026-11-14); own-words answers needed several corrections, so not higher. Later same day, own words and correct: why a sequential scan beats an index on a tiny table; composite index order (leftmost prefix) needed one correction | 2026-11-14 |
@@ -45,11 +45,23 @@ Add rows when a new concept appears. Keep names specific.
 - [x] Phase 2, step 3: write `WatchlistItemConfiguration` yourself, without an example (done 2026-11-14, after review), then explain in your own words why `decimal` and not `double` for prices (done: exact versus not exact; missed binary versus base-10 as the cause).
 - [x] Phase 2, step 4a: create `AppDbContext` and `InstrumentConfiguration` yourself (done 2026-11-15, after review: wrong `DbContextOptions<DbContext>`, a `HasKey` that overwrote the key, an index on `Id` instead of `Symbol`).
 - [x] Phase 2, step 4b-1: write `AddInfrastructure` (`AddDbContext` + `UseNpgsql` + snake_case), call it from `Api` and `Worker`, set the connection string with user secrets (done 2026-11-16, after review: missing `this`, wrong auto-import).
-- [ ] Phase 2, step 4b-2: install `dotnet-ef`, generate the first migration (`InitialCreate`) and explain every line of the generated SQL (`NOT NULL`, `ON DELETE`, indexes). Also explain why `dotnet ef` needs `--startup-project`.
+- [x] Phase 2, step 4b-2: install `dotnet-ef`, generate the first migration (`InitialCreate`), apply it and explain the generated SQL (done 2026-11-18; `--startup-project` reason was explained by the AI, not yet answered by the owner).
+- [ ] Phase 2, step 5: next exercise to be chosen with `cw-plan` (`UserId` on `WatchlistItem`, then the first Api endpoint). Without AI: write the unique `(UserId, InstrumentId)` mapping and a second migration yourself.
 
 ## Session log
 
 Newest first. Written by `cw-learn` after each session.
+
+### 2026-11-18 – Phase 2, step 4b-2: first migration
+- Built: `dotnet-ef` installed, `Microsoft.EntityFrameworkCore.Design` in `Api`, `InitialCreate` generated and applied to the local Postgres.
+- Concepts: design-time tooling and the startup project, `__EFMigrationsHistory`, `NOT NULL` origin, `Restrict` versus `Cascade` in SQL, composite primary key order, from mapping to migration to real table.
+- Hard: zsh glob on `10.0.*`; tool version 11 versus packages 10.
+- Quiz:
+  - `nullable: false`, `onDelete: Restrict`, no `id` on `price_quotes`: mostly right; `Restrict` gives a foreign key error, not a silent no-op.
+  - `Cascade` on `watchlist_items`: right.
+  - Key order `(instrument_id, date)`: leftmost prefix right; the range-query argument was added by the AI.
+  - Why `dotnet ef` needs the `Api`: not answered; explained by the AI.
+- Next time I do myself: step 5 (see exercises).
 
 ### 2026-11-16 – Phase 2, step 4b-1: AddInfrastructure and user secrets
 - Built: `AddInfrastructure` extension (connection string with a fail-fast check, `AddDbContext`), called from `Api` and `Worker`; connection string in user secrets. Written by the owner; the AI reviewed.
