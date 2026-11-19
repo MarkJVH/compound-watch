@@ -9,7 +9,8 @@ public class WatchlistItemConfiguration : IEntityTypeConfiguration<WatchlistItem
     public void Configure(EntityTypeBuilder<WatchlistItem> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.HasIndex(x => x.InstrumentId).IsUnique();
+        builder.HasIndex(x => x.InstrumentId);
+        builder.HasIndex(x => new { x.UserId, x.InstrumentId }).IsUnique();
         builder
             .HasOne<Instrument>()
             .WithMany()

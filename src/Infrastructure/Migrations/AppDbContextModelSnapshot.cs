@@ -117,12 +117,19 @@ namespace CompoundWatch.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("instrument_id");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("pk_watchlist_items");
 
                     b.HasIndex("InstrumentId")
-                        .IsUnique()
                         .HasDatabaseName("ix_watchlist_items_instrument_id");
+
+                    b.HasIndex("UserId", "InstrumentId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_watchlist_items_user_id_instrument_id");
 
                     b.ToTable("watchlist_items", (string)null);
                 });
