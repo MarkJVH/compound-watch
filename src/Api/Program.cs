@@ -1,3 +1,4 @@
+using CompoundWatch.Api;
 using CompoundWatch.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.MapWatchlistEndpoints();
 app.MapHealthChecks("/health");
 
 app.Run();
