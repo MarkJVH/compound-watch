@@ -2,6 +2,7 @@ using CompoundWatch.Domain;
 using CompoundWatch.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace CompoundWatch.Api;
 
@@ -31,14 +32,21 @@ public static class WatchlistEndpoints
                     return Results.NotFound();
                 }
 
-                var item = WatchlistItem.Create(body.InstrumentId, userId, DateTimeOffset.UtcNow);
+                var item = WatchlistItem.Create(
+                    body.InstrumentId,
+                    userId,
+                    TimeProvider.System.GetUtcNow()
+                );
                 db.WatchlistItems.Add(item);
 
                 try
                 {
                     await db.SaveChangesAsync(ct);
                 }
-                catch (DbUpdateException)
+                catch (DbUpdateException ex)
+                    when (ex.InnerException
+                            is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation }
+                    )
                 {
                     return Results.Conflict();
                 }
@@ -58,11 +66,17 @@ public static class WatchlistEndpoints
                 CancellationToken ct
             ) =>
             {
+                if (userId == Guid.Empty)
+                {
+                    return Results.BadRequest();
+                }
+
                 var items = await db
                     .WatchlistItems.AsNoTracking()
                     .Where(w => w.UserId == userId)
                     .Select(w => new WatchlistItemResponse(w.Id, w.InstrumentId, w.AddedAt))
-                    .ToListAsync();
+                    .ToListAsync(ct);
+
                 return Results.Ok(items);
             }
         );
