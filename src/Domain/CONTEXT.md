@@ -4,7 +4,7 @@
 The core of the application: entities, value objects, domain rules and message contracts. Pure C#.
 
 ## Current state
-`Instrument`, `WatchlistItem` and `PriceQuote` (daily OHLC + volume, composite key `(InstrumentId, Date)` set up in Infrastructure). Alert rules come later.
+`Instrument`, `WatchlistItem` and `PriceQuote` (daily OHLC + volume, composite key `(InstrumentId, Date)` set up in Infrastructure). `WatchlistItem` belongs to a `UserId` (plain Guid, no User entity yet); `Create` rejects `Guid.Empty` for both ids. Alert rules come later.
 
 ## Standards
 - See ADR 0001 (Guid v7 keys) and ADR 0002 (rich, persistence-ignorant model).

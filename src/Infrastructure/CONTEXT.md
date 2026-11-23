@@ -4,7 +4,7 @@
 Implementations of everything that touches the outside world: PostgreSQL via EF Core (DbContext, mappings, migrations), RabbitMQ publishing, market-data clients and mail.
 
 ## Current state
-Empty; the EF Core `DbContext` and first migration arrive in phase 2.
+`AppDbContext` with `Instrument`, `WatchlistItem` and `PriceQuote` mappings in `Persistence/`. Migrations: `InitialCreate`, `AddUserIdToWatchlistItem`. The watchlist is unique per `(UserId, InstrumentId)`. Integration tests are still open.
 
 ## Standards
 - References only `Domain`. `Api` and `Worker` reference this project and register services through an `AddInfrastructure(...)` extension.
@@ -17,3 +17,5 @@ Empty; the EF Core `DbContext` and first migration arrive in phase 2.
 
 ## Local database
 `docker compose up -d postgres` (user/password/database in `docker-compose.yml`, port 5432).
+
+Migrations: `dotnet ef migrations add <Name> --project src/Infrastructure --startup-project src/Api`, then `dotnet ef database update` with the same flags.

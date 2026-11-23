@@ -19,13 +19,13 @@ A level only goes up with evidence in the table. It may go down after a relapse 
 | Concept | Level | Evidence | Last updated |
 |---|---|---|---|
 | C# language basics (value types, `default`, nullability, `nameof`, exceptions) | 2 | Wrote `Instrument`, `WatchlistItem`, `PriceQuote` myself with AI hints/review (commits `fba1968`, `fea7be3`) | 2026-11-13 |
-| C# async/await and `CancellationToken` | 0 | – | – |
+| C# async/await and `CancellationToken` | 1 | Explained why `await` frees the thread during I/O and that `ct` cancels the query when the client aborts (session 2026-11-23); not yet in own words | 2026-11-23 |
 | Dependency injection and options pattern | 2 | Wrote `AddInfrastructure` (`AddDbContext`, connection string fail-fast) and wired it in `Api` and `Worker` myself with hints (commit `03f2ab4`). Own words: one context for all environments through injected options. Mistake: thought a missing connection string fails at build time | 2026-11-18 |
-| Minimal API design (routing, DTOs, validation, `ProblemDetails`) | 0 | – | – |
+| Minimal API design (routing, DTOs, validation, `ProblemDetails`) | 2 | Wrote `WatchlistEndpoints.cs` myself with hints: `MapGroup`, DI-bound handlers, request/response records, status codes 201/400/404/409 (commits `d5f3dc7`, `bb29599`). Mistake: thought my guard catches a missing header; model binding returns 400 before the handler runs. `ProblemDetails` still open | 2026-11-23 |
 | EF Core mapping and constraints | 3 | Wrote `PriceQuoteConfiguration` from an `Instrument` example (2026-11-14), then `WatchlistItemConfiguration` (key, unique index, FK, `Cascade`) without an example; the AI only reviewed (first version had 3 compile errors and a wrong uniqueness argument, fixed after review). Own words: `decimal` is exact base-10, `double` is not | 2026-11-14 |
 | EF Core migrations | 2 | Generated and applied `InitialCreate` with AI-given commands; read the C# migration and the real table in `psql`. Own words: `NOT NULL` source, `Restrict` versus `Cascade`, composite key order (needed a refinement) | 2026-11-18 |
-| EF Core querying (tracking, projection, N+1) | 0 | – | – |
-| Transactions and concurrency | 0 | – | – |
+| EF Core querying (tracking, projection, N+1) | 2 | Wrote the `AsNoTracking` + `Select` projection to a DTO and `AnyAsync` myself with hints (commit `bb29599`); deferred execution explained | 2026-11-23 |
+| Transactions and concurrency | 1 | Own words, correct: check-then-act race on a duplicate POST, the unique index is the real guarantee, the catch maps the loser to 409 (session 2026-11-23) | 2026-11-23 |
 | PostgreSQL basics (indexes, query plans) | 1 | Explained B-tree, page, page split, cache miss, Guid v7 versus v4 (session 2026-11-14); own-words answers needed several corrections, so not higher. Later same day, own words and correct: why a sequential scan beats an index on a tiny table; composite index order (leftmost prefix) needed one correction | 2026-11-14 |
 | RabbitMQ (exchanges, queues, ack/nack) | 0 | – | – |
 | Idempotency, retries and dead-lettering | 0 | – | – |
@@ -46,11 +46,21 @@ Add rows when a new concept appears. Keep names specific.
 - [x] Phase 2, step 4a: create `AppDbContext` and `InstrumentConfiguration` yourself (done 2026-11-15, after review: wrong `DbContextOptions<DbContext>`, a `HasKey` that overwrote the key, an index on `Id` instead of `Symbol`).
 - [x] Phase 2, step 4b-1: write `AddInfrastructure` (`AddDbContext` + `UseNpgsql` + snake_case), call it from `Api` and `Worker`, set the connection string with user secrets (done 2026-11-16, after review: missing `this`, wrong auto-import).
 - [x] Phase 2, step 4b-2: install `dotnet-ef`, generate the first migration (`InitialCreate`), apply it and explain the generated SQL (done 2026-11-18; `--startup-project` reason was explained by the AI, not yet answered by the owner).
-- [ ] Phase 2, step 5: next exercise to be chosen with `cw-plan` (`UserId` on `WatchlistItem`, then the first Api endpoint). Without AI: write the unique `(UserId, InstrumentId)` mapping and a second migration yourself.
+- [x] Phase 2, step 5: `UserId` on `WatchlistItem`, unique `(UserId, InstrumentId)` mapping, second migration and the first Api endpoints (done 2026-11-23, with hints and review).
+- [ ] Phase 2, step 6: write an integration test for `POST /watchlist` (201 and 409) with `WebApplicationFactory` and Testcontainers, without AI.
 
 ## Session log
 
 Newest first. Written by `cw-learn` after each session.
+
+### 2026-11-23 – Phase 2, step 5: watchlist endpoints
+- Built: `UserId` on `WatchlistItem`, per-user unique index, `AddUserIdToWatchlistItem` migration, `POST` and `GET /watchlist` with an `X-User-Id` header, `catch` narrowed to a Postgres unique violation. Written by the owner; the AI reviewed.
+- Concepts: static classes and extension methods, `MapGroup`, handler parameter binding, `record` versus class, `AsNoTracking`, projection and deferred execution, `async` I/O, 201/400/404/409 semantics, exception filters (`when`), user secrets location, `docker compose` and `psql`.
+- Hard: `static`/`this`, `record` versus class, REST Client variable with a dot, missing header versus empty Guid.
+- Quiz:
+  - Why catch a unique violation despite a prior check: right, own words (race condition).
+  - Missing `X-User-Id` header: answered incorrectly; model binding returns 400 before the handler runs, the guard only catches `Guid.Empty`.
+- Next time I do myself: step 6 (see exercises).
 
 ### 2026-11-18 – Phase 2, step 4b-2: first migration
 - Built: `dotnet-ef` installed, `Microsoft.EntityFrameworkCore.Design` in `Api`, `InitialCreate` generated and applied to the local Postgres.
